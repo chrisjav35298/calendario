@@ -1,0 +1,29 @@
+.enviado {
+    color: rgb(5, 187, 5); /* Color para el estado 'Enviado' */
+}
+
+.confirmado {
+    color: rgb(83, 83, 236); /* Color para el estado 'Confirmado' */
+}
+
+.rechazado {
+    color: rgb(209, 61, 61); /* Color para el estado 'Rechazado' */
+}
+
+.hidden {
+    display: none; 
+}   
+
+.container {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+
+nav img {
+    width: 90px; /* Ancho deseado */
+    height: auto; /* Altura ajustada automáticamente */
+    margin-left: 20px; /* Espacio entre la imagen y el texto */
+}
+

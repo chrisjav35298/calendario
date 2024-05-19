@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Turnos solicitados{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+{% endblock %}
+
+{% block nav %}
+    {{ parent() }}
+{% endblock %}
+
+{% block main %}
+    <h1>Turnos solicitados</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Solicitante</th>
+                <th>Fecha</th>
+                <th>Turno</th>
+                <th>Observacion</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for solicitar_turno in pagination %}
+            <tr>
+                <td>{{ solicitar_turno.id }}</td>
+                <td>{{ solicitar_turno.solicitante }}</td>
+                <td>{{ solicitar_turno.fecha ? solicitar_turno.fecha|date('Y-m-d') : '' }}</td>
+                <td>{{ solicitar_turno.turno }}</td>
+                <td>{{ solicitar_turno.observacion }}</td>
+                <td>
+                    {% if solicitar_turno.estado == 1 %}
+                        Enviado
+                    {% elseif solicitar_turno.estado == 2 %}
+                        Confirmado
+                    {% else %}
+                        Rechazado
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('app_solicitar_turno_show', {'id': solicitar_turno.id}) }}">Ver</a>
+                    <a href="{{ path('app_solicitar_turno_edit', {'id': solicitar_turno.id}) }}">Editar</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">No se encontraron registros</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+    <div>
+        <a href="{{ path('app_solicitar_turno_new') }}">Crear nuevo</a>
+    </div>
+{% endblock %}

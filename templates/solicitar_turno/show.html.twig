@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SolicitarTurno{% endblock %}
+
+{% block body %}
+    <h1>SolicitarTurno</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ solicitar_turno.id }}</td>
+            </tr>
+            <tr>
+                <th>Solicitante</th>
+                <td>{{ solicitar_turno.solicitante }}</td>
+            </tr>
+            <tr>
+                <th>Fecha</th>
+                <td>{{ solicitar_turno.fecha ? solicitar_turno.fecha|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Observacion</th>
+                <td>{{ solicitar_turno.observacion }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ solicitar_turno.estado }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_solicitar_turno_index') }}">back to list</a>
+
+    <a href="{{ path('app_solicitar_turno_edit', {'id': solicitar_turno.id}) }}">edit</a>
+
+    {{ include('solicitar_turno/_delete_form.html.twig') }}
+{% endblock %}

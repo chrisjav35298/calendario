@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Turnos solicitados Editar{% endblock %}
+
+{# {{ knp_pagination_rel_links(pagination) }} #}
+{% block stylesheets %}
+ {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('css/styles.css') }}"> 
+ 
+ {% endblock %}
+
+
+ {% block nav %}
+ {{parent()}}
+  {% endblock %}
+
+{% block main %}
+{{parent()}}
+  
+   <main class="container">
+        <h1 class="">Editar Turno</h1>
+         <div class="">
+            {{ form_start(form) }}
+            <div class="">
+                <label class="" >Solicitante</label>
+                {{ form_widget(form.solicitante, { 'attr': {'class': '','readonly': 'readonly'} }) }}
+            </div>
+            
+            <div class="">
+                <label class="" >Fecha</label>
+                {{ form_widget(form.fecha, { 'attr': {'class': '','readonly': 'readonly'} }) }}
+            </div>
+            <div class="">
+                <label class="block  text-sm font-bold mb-2" for="turno">Turno</label>
+                {{ form_widget(form.turno, { 'attr': {'class': '','readonly': 'readonly'} }) }}
+            </div>
+         
+              <div class="">
+                <label class="" >Estado</label>
+                {{ form_widget(form.estado, { 'attr': {'class': ''} }) }}
+            </div>
+            <div class="">
+                <label class="">Observación</label>
+                {{ form_widget(form.observacion, { 'attr': {'class': ''} }) }}
+            </div>
+
+            <button type="submit" class="">Guardar</button>
+
+            {{ form_end(form) }}
+       </div>
+       </div>
+
+
+      
+{# 
+        {{ form_start(form) }}
+        {{ form_row(form.fecha) }}
+        {{ form_row(form.turno) }}
+        {{ form_row(form.estado) }}
+
+        {{ form_row(form.observacion) }} #}
+  
+         {# <button type="submit" >{{ button_label|default('Save') }}</button> #}
+        {# {{ form_end(form) }}
+  #}
+         {# {{ include('solicitar_turno/_delete_form.html.twig') }}  #}
+  <br>
+       </main>
+       
+
+
+ {% endblock %}
+ {% block javascripts %}
+ <script>
+  document.addEventListener('DOMContentLoaded', function() {
+        const inputFecha = document.getElementById('solicitar_turno_fecha');
+        inputFecha.setAttribute('readonly', 'readonly');
+
+        const inputTurno = document.getElementById('solicitar_turno_turno');
+        inputTurno.setAttribute('readonly', 'readonly');
+    });
+
+ 
+
+ </script>
+  {% endblock %}

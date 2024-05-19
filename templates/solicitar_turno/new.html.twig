@@ -1,0 +1,121 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Solicitar Turno{% endblock %}
+{% block stylesheets %}
+{{ parent() }}
+ <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+{% endblock %}
+
+
+   {% block main %}
+   {{ parent()}}
+   <main class="container">
+       <h1 class="">Solicitar Turno</h1>
+        <div class="">
+           {{ form_start(form) }}
+           
+       <div class="">
+           <!-- Date-->
+           <label for="date" >Fecha
+               {{ form_widget(form.fecha, { 'attr': {'class': ''} }) }}
+            
+           </label>
+           <div class="">
+               <label class="" for="">Solicitante</label>
+               {{ form_widget(form.solicitante, { 'attr': {'class': ''} }) }}
+           </div>
+           <div class="">
+                <label class="" for="">Turno</label>
+                {{ form_widget(form.turno, { 'attr': {'class': ''} }) }}
+            </div>
+           <div class="">
+               <label class="hidden">Observación</label>
+               {{ form_widget(form.observacion, { 'attr': {'class': 'hidden'} }) }}
+           </div>
+             <div class="">
+               <label class="hidden" >Estado</label>
+               {{ form_widget(form.estado, { 'attr': {'class': 'hidden'} }) }}
+           </div>
+           <button type="submit" class="">Enviar</button>
+
+           {{ form_end(form) }}
+      </div>
+
+  
+ <div id="calendar" class="mb-20"></div>
+      </main>
+      
+{% endblock %}
+
+
+{% block javascripts %}
+     <script src="{{ asset('js/calendario/index.global.min.js') }}"></script>
+     <script src="{{ asset('js/calendario/diasOcupados.js') }}"></script>
+     <script>
+        // Utilizar la variable 'url' en tu archivo JavaScript
+    </script>
+
+    <script>
+    // Función para validar que la fecha seleccionada no sea anterior al día de hoy
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputFecha = document.getElementById('solicitar_turno_fecha');
+        const fechaActual = new Date();
+
+        inputFecha.addEventListener('change', function(event) {
+            const fechaIngresada = new Date(event.target.value);
+
+            // Verificar si la fecha ingresada es menor que la fecha actual
+            if (fechaIngresada < fechaActual) {
+                alert('No puede seleccionar una fecha anterior al día de hoy!');
+                event.target.value = ''; // Limpiar el valor del input
+            }
+        });
+    });
+
+ //Inicialización del calendario y manejo de selección de fechas
+    document.addEventListener('DOMContentLoaded', function() {
+        let turnosOcupados = {{ turnosOcupados|json_encode|raw }};
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            selectable: true,
+            locale: 'es',
+            select: function(info) {
+                const fechaSeleccionada = info.start;
+                const fechaActual = new Date();
+                
+                // Verificar si la fecha seleccionada es menor que la fecha actual
+                if (fechaSeleccionada < fechaActual) {
+                    alert('No puede seleccionar una fecha anterior al día de hoy!');
+                    return;
+                }
+
+                const year = fechaSeleccionada.getFullYear();
+                const month = String(fechaSeleccionada.getMonth() + 1).padStart(2, '0');
+                const day = String(fechaSeleccionada.getDate()).padStart(2, '0');
+
+                const fechaFormateada = `${year}-${month}-${day}`;
+
+                if (turnosOcupados.includes(fechaFormateada)) {
+                    return;
+                }
+
+                document.getElementById('solicitar_turno_fecha').value = fechaFormateada;
+            },
+            events: [
+                // Aquí puedes agregar eventos ocupados al calendario si lo deseas
+                {% for fecha in turnosOcupados %}
+                {
+                    title: 'Asignado',
+                    start: '{{ fecha }}',
+                    color: 'violet'
+                },
+                {% endfor %}
+            ]
+        });
+        calendar.render();
+    });
+</script> 
+
+{% endblock %}
