@@ -10,6 +10,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SolicitarTurno
 {
+    const TURNOS = [
+        '8 a 10' => 'morning_1',
+        '10 a 12' => 'morning_2',
+        '14 a 18' => 'tarde_1',
+        '18 a 20' => 'tarde_2',
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

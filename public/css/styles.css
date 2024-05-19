@@ -27,3 +27,11 @@ nav img {
     margin-left: 20px; /* Espacio entre la imagen y el texto */
 }
 
+.error-message {
+    background-color: #f8d7da; /* Color de fondo rojo claro */
+    color: #721c24; /* Color de texto rojo oscuro */
+    border: 1px solid #f5c6cb; /* Borde rojo */
+    padding: 10px; /* Espaciado interno */
+    margin-bottom: 10px; /* Margen inferior */
+}
+

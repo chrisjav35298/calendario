@@ -3,48 +3,60 @@
 
 {% block title %}Solicitar Turno{% endblock %}
 {% block stylesheets %}
+
+<style>
+    .error-message {
+    background-color: #f8d7da; /* Color de fondo rojo claro */
+    color: #721c24; /* Color de texto rojo oscuro */
+    border: 1px solid #f5c6cb; /* Borde rojo */
+    padding: 10px; /* Espaciado interno */
+    margin-bottom: 10px; /* Margen inferior */
+}
+</style>
 {{ parent() }}
  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 {% endblock %}
 
 
    {% block main %}
+   
+   
+ 
    {{ parent()}}
    <main class="container">
-       <h1 class="">Solicitar Turno</h1>
-        <div class="">
-           {{ form_start(form) }}
-           
-       <div class="">
-           <!-- Date-->
-           <label for="date" >Fecha
-               {{ form_widget(form.fecha, { 'attr': {'class': ''} }) }}
-            
-           </label>
-           <div class="">
-               <label class="" for="">Solicitante</label>
-               {{ form_widget(form.solicitante, { 'attr': {'class': ''} }) }}
-           </div>
-           <div class="">
-                <label class="" for="">Turno</label>
-                {{ form_widget(form.turno, { 'attr': {'class': ''} }) }}
-            </div>
-           <div class="">
-               <label class="hidden">Observación</label>
-               {{ form_widget(form.observacion, { 'attr': {'class': 'hidden'} }) }}
-           </div>
-             <div class="">
-               <label class="hidden" >Estado</label>
-               {{ form_widget(form.estado, { 'attr': {'class': 'hidden'} }) }}
-           </div>
-           <button type="submit" class="">Enviar</button>
-
-           {{ form_end(form) }}
-      </div>
-
-  
- <div id="calendar" class="mb-20"></div>
-      </main>
+    <h1 class="">Solicitar Turno</h1>
+    {% for flashMessage in app.flashes('error') %}
+    <div class="error-message">
+        {{ flashMessage }}
+    </div>
+    {% endfor %}
+<div class="">
+    {{ form_start(form) }}
+    <div class="">
+        <label for="date">Fecha</label>
+        {{ form_widget(form.fecha, { 'attr': {'class': 'form-control'} }) }}
+    </div>
+    <div class="">
+        <label for="solicitante">Solicitante</label>
+        {{ form_widget(form.solicitante, { 'attr': {'class': 'form-control'} }) }}
+    </div>
+    <div class="">
+        <label for="turno">Turno</label>
+        {{ form_widget(form.turno, { 'attr': {'class': 'form-control'} }) }}
+    </div>
+    <div class="">
+        <label for="observacion"  class="hidden" >Observación</label>
+        {{ form_widget(form.observacion, { 'attr': {'class': 'hidden'} }) }}
+    </div>
+    <div class="">
+        <label for="estado"  class="hidden">Estado</label>
+        {{ form_widget(form.estado, { 'attr': {'class': 'hidden'} }) }}
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+    {{ form_end(form) }}
+</div>
+<div id="calendar" class="mt-4"></div>
+</main>
       
 {% endblock %}
 
@@ -104,15 +116,15 @@
                 document.getElementById('solicitar_turno_fecha').value = fechaFormateada;
             },
             events: [
-                // Aquí puedes agregar eventos ocupados al calendario si lo deseas
-                {% for fecha in turnosOcupados %}
-                {
-                    title: 'Asignado',
-                    start: '{{ fecha }}',
-                    color: 'violet'
-                },
-                {% endfor %}
-            ]
+            {% for turno in turnosOcupados %}
+            
+            {
+                title: '{{ turno.solicitante }}',
+                start: '{{ turno.fecha }}',
+                color: 'violet' // Color para indicar que el turno está ocupado
+            },
+            {% endfor %}
+        ]
         });
         calendar.render();
     });

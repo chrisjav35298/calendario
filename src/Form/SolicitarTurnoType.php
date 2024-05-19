@@ -25,8 +25,10 @@ class SolicitarTurnoType extends AbstractType
             ])
             ->add('turno', ChoiceType::class, [
                 'choices' => [
-                    'Matutino' => 1,
-                    'Vespertino' => 2,
+                    '8 a 10' => 'morning_1',
+                    '10 a 12' => 'morning_2',
+                    '14 a 18' => 'tarde_1',
+                    '18 a 20' => 'tarde_2',
                    // 'Indistinto' => 3,
                 ]
             ])

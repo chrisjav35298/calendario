@@ -21,20 +21,54 @@ class SolicitarTurnoRepository extends ServiceEntityRepository
         parent::__construct($registry, SolicitarTurno::class);
     }
 
-       /**
+    /**
     * @return SolicitarTurno[] Returns an array of SolicitarTurno objects
     */
-   public function findByMesPosterior(): array
-   {
-       return $this->createQueryBuilder('s')
-           ->where('s.fecha >= :val')
-           ->setParameter(':val',new \DateTime()) 
-           ->orderBy('s.id', 'ASC')
-           ->setMaxResults(10)
-           ->getQuery()
-           ->getResult()
-       ;
-   }
+    public function findByMesPosterior(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.fecha >= :val')
+            ->setParameter(':val',new \DateTime()) 
+            ->orderBy('s.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+    /**
+    * @return SolicitarTurno[] Returns an array of SolicitarTurno objects
+    */
+    public function findFechaYturno( $turnoSolicitado,$fechaSolicitadaString)
+    {
+        return $this->createQueryBuilder('st')
+        ->andWhere('st.fecha = :fecha')
+        ->andWhere('st.turno = :turno')
+        ->setParameter('fecha', $fechaSolicitadaString)
+        ->setParameter('turno', $turnoSolicitado)
+        ->getQuery()
+        ->getOneOrNullResult();
+        ;
+    }
+
+
+    /**
+    * @return SolicitarTurno[] Returns an array of SolicitarTurno objects
+    */
+    public function findbySolicitante($solicitante, $fechaSolicitada)
+    {
+        $fechaInicioIntervalo = $fechaSolicitada->modify('-30 days')->format('Y-m-d');
+        
+        return $this->createQueryBuilder('st')
+            ->where('st.fecha BETWEEN :fechaInicio AND :fechaFin')
+            ->andWhere('st.solicitante = :solicitante')
+            ->setParameter('fechaInicio', $fechaInicioIntervalo)
+            ->setParameter('fechaFin', $fechaSolicitada->format('Y-m-d'))
+            ->setParameter('solicitante', $solicitante)
+            ->getQuery()
+            ->getResult();
+    }
 
     public function add(SolicitarTurno $entity, bool $flush = false): void
     {
