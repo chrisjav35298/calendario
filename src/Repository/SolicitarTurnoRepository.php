@@ -73,6 +73,7 @@ class SolicitarTurnoRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+  
     public function add(SolicitarTurno $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

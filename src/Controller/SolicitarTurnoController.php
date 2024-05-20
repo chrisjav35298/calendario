@@ -122,8 +122,9 @@ class SolicitarTurnoController extends AbstractController
             $turnoSolicitante = $solicitarTurnoRepository->findbySolicitante($solicitante, $fechaSolicitada);
             $turnoExistente = $solicitarTurnoRepository->findFechaYturno($turnoSolicitado, $fechaSolicitadaString);
             
-            if ($turnoSolicitante) {
-                $this->addFlash('error', 'Ya ha solicitado un turno en menos de 30 días.');
+            if ($turnoSolicitante || $turnoExistenteReserva) {
+                $this->addFlash('error', 'Ya ha solicitado un turno en menos de 30 días! y/o desea solicitar un turno
+                                con mas de 30 días de diferencia con la fecha de hoy!.');
                 return $this->redirectToRoute('app_solicitar_turno_new');
             } elseif ($turnoExistente !== null) {
                 // Ya existe un registro para el mismo día y turno
