@@ -41,7 +41,69 @@ class SolicitarTurnoController extends AbstractController
         ]);
     }
 
-   /**
+//    /**
+//      * @Route("/new", name="app_solicitar_turno_new", methods={"GET", "POST"})
+//      */
+//     public function new(Request $request, EntityManagerInterface $entityManager, SolicitarTurnoRepository $solicitarTurnoRepository): Response
+//     {
+//         $solicitarTurno = new SolicitarTurno();
+//         $form = $this->createForm(SolicitarTurnoType::class, $solicitarTurno);
+//         $form->handleRequest($request);
+
+//         if ($form->isSubmitted() && $form->isValid()) {
+//            // Obtener la fecha y el turno solicitados
+//         $fechaSolicitada = $solicitarTurno->getFecha();
+//         $turnoSolicitado = $solicitarTurno->getTurno();
+//         $fechaSolicitadaString = $fechaSolicitada->format('Y-m-d');
+//         $solicitante=$solicitarTurno->getSolicitante();
+
+//         $turnoSolitante= $solicitarTurnoRepository->findbySolicitante( $solicitante, $fechaSolicitada);
+
+//         if($turnoSolitante!== null){
+          
+//             $this->addFlash('error', 'Ya ha solicitado un turno en menos de 30 días.');
+//             return $this->redirectToRoute('app_solicitar_turno_new');
+//         }
+//         $turnoExistente= $solicitarTurnoRepository->findFechaYturno( $turnoSolicitado,$fechaSolicitadaString);
+
+
+
+//         if ($turnoExistente !== null) {
+//             // Ya existe un registro para el mismo día y turno
+//             $this->addFlash('error', 'Ya se ha solicitado un turno para ese día y horario.');
+//             return $this->redirectToRoute('app_solicitar_turno_new');
+//         } else {
+//                 $solicitarTurno->setEstado(1);
+//                 $entityManager->persist($solicitarTurno);
+//                 $entityManager->flush();
+
+//                 return $this->redirectToRoute('app_solicitar_turno_index', [], Response::HTTP_SEE_OTHER);
+//             }
+    
+//         }
+//         $fechasOcupadas = $solicitarTurnoRepository->findByMesPosterior();
+//         $turnosOcupados = [];
+       
+//         foreach ($fechasOcupadas as $turno) {
+//             $turnosOcupados[] = [
+//                 'fecha' => $turno->getFecha()->format('Y-m-d'),
+//                 'turno' => $turno->getTurno(),
+//                 'solicitante' => $turno->getSolicitante(),
+
+//             ];
+//         }
+
+//         return $this->renderForm('solicitar_turno/new.html.twig', [
+//             'solicitar_turno' => $solicitarTurno,
+//             'form' => $form,
+//             'turnosOcupados' => $turnosOcupados,
+//         ]);
+//     }
+
+
+
+
+    /**
      * @Route("/new", name="app_solicitar_turno_new", methods={"GET", "POST"})
      */
     public function new(Request $request, EntityManagerInterface $entityManager, SolicitarTurnoRepository $solicitarTurnoRepository): Response
@@ -51,45 +113,38 @@ class SolicitarTurnoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-           // Obtener la fecha y el turno solicitados
-        $fechaSolicitada = $solicitarTurno->getFecha();
-        $turnoSolicitado = $solicitarTurno->getTurno();
-        $fechaSolicitadaString = $fechaSolicitada->format('Y-m-d');
-        $solicitante=$solicitarTurno->getSolicitante();
+            // Obtener la fecha y el turno solicitados
+            $fechaSolicitada = $solicitarTurno->getFecha();
+            $turnoSolicitado = $solicitarTurno->getTurno();
+            $fechaSolicitadaString = $fechaSolicitada->format('Y-m-d');
+            $solicitante = $solicitarTurno->getSolicitante();
 
-        $turnoSolitante= $solicitarTurnoRepository->findbySolicitante( $solicitante, $fechaSolicitada);
-
-        if($turnoSolitante!== null){
-          
-            $this->addFlash('error', 'Ya ha solicitado un turno en menos de 30 días.');
-            return $this->redirectToRoute('app_solicitar_turno_new');
-        }
-        $turnoExistente= $solicitarTurnoRepository->findFechaYturno( $turnoSolicitado,$fechaSolicitadaString);
-
-
-
-        if ($turnoExistente !== null) {
-            // Ya existe un registro para el mismo día y turno
-            $this->addFlash('error', 'Ya se ha solicitado un turno para ese día y horario.');
-            return $this->redirectToRoute('app_solicitar_turno_new');
-        } else {
+            $turnoSolicitante = $solicitarTurnoRepository->findbySolicitante($solicitante, $fechaSolicitada);
+            $turnoExistente = $solicitarTurnoRepository->findFechaYturno($turnoSolicitado, $fechaSolicitadaString);
+            
+            if ($turnoSolicitante) {
+                $this->addFlash('error', 'Ya ha solicitado un turno en menos de 30 días.');
+                return $this->redirectToRoute('app_solicitar_turno_new');
+            } elseif ($turnoExistente !== null) {
+                // Ya existe un registro para el mismo día y turno
+                $this->addFlash('error', 'Ya se ha solicitado un turno para ese día y horario.');
+                return $this->redirectToRoute('app_solicitar_turno_new');
+            } else {
                 $solicitarTurno->setEstado(1);
                 $entityManager->persist($solicitarTurno);
                 $entityManager->flush();
-
                 return $this->redirectToRoute('app_solicitar_turno_index', [], Response::HTTP_SEE_OTHER);
             }
-    
         }
+
         $fechasOcupadas = $solicitarTurnoRepository->findByMesPosterior();
         $turnosOcupados = [];
-       
+
         foreach ($fechasOcupadas as $turno) {
             $turnosOcupados[] = [
                 'fecha' => $turno->getFecha()->format('Y-m-d'),
                 'turno' => $turno->getTurno(),
                 'solicitante' => $turno->getSolicitante(),
-
             ];
         }
 
@@ -99,6 +154,13 @@ class SolicitarTurnoController extends AbstractController
             'turnosOcupados' => $turnosOcupados,
         ]);
     }
+
+
+
+
+
+
+
     /**
      * @Route("/{id}", name="app_solicitar_turno_show", methods={"GET"})
      */

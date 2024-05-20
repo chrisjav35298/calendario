@@ -2,28 +2,28 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Solicitar Turno{% endblock %}
-{% block stylesheets %}
+    {% block stylesheets %}
 
-<style>
-    .error-message {
-    background-color: #f8d7da; /* Color de fondo rojo claro */
-    color: #721c24; /* Color de texto rojo oscuro */
-    border: 1px solid #f5c6cb; /* Borde rojo */
-    padding: 10px; /* Espaciado interno */
-    margin-bottom: 10px; /* Margen inferior */
-}
-</style>
-{{ parent() }}
- <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-{% endblock %}
+    <style>
+        .error-message {
+        background-color: #f8d7da; /* Color de fondo rojo claro */
+        color: #721c24; /* Color de texto rojo oscuro */
+        border: 1px solid #f5c6cb; /* Borde rojo */
+        padding: 10px; /* Espaciado interno */
+        margin-bottom: 10px; /* Margen inferior */
+        }
+
+
+    </style>
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    {% endblock %}
 
 
    {% block main %}
-   
-   
  
    {{ parent()}}
-   <main class="container">
+   <main class="container-new">
     <h1 class="">Solicitar Turno</h1>
     {% for flashMessage in app.flashes('error') %}
     <div class="error-message">
@@ -59,15 +59,15 @@
 </main>
       
 {% endblock %}
+{% block footer%}
+
+{{ parent()}}
+{% endblock %}
 
 
 {% block javascripts %}
      <script src="{{ asset('js/calendario/index.global.min.js') }}"></script>
      <script src="{{ asset('js/calendario/diasOcupados.js') }}"></script>
-     <script>
-        // Utilizar la variable 'url' en tu archivo JavaScript
-    </script>
-
     <script>
     // Función para validar que la fecha seleccionada no sea anterior al día de hoy
     document.addEventListener('DOMContentLoaded', function() {

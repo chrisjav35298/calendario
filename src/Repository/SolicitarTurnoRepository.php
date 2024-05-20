@@ -28,6 +28,7 @@ class SolicitarTurnoRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')
             ->where('s.fecha >= :val')
+            ->andWhere('s.estado <> 3')
             ->setParameter(':val',new \DateTime()) 
             ->orderBy('s.id', 'ASC')
             ->setMaxResults(10)
@@ -45,6 +46,8 @@ class SolicitarTurnoRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('st')
         ->andWhere('st.fecha = :fecha')
         ->andWhere('st.turno = :turno')
+        ->andWhere('st.estado <> 3')
+
         ->setParameter('fecha', $fechaSolicitadaString)
         ->setParameter('turno', $turnoSolicitado)
         ->getQuery()
@@ -52,13 +55,13 @@ class SolicitarTurnoRepository extends ServiceEntityRepository
         ;
     }
 
-
     /**
-    * @return SolicitarTurno[] Returns an array of SolicitarTurno objects
-    */
+     * @return SolicitarTurno[] Returns an array of SolicitarTurno objects
+     */
     public function findbySolicitante($solicitante, $fechaSolicitada)
     {
-        $fechaInicioIntervalo = $fechaSolicitada->modify('-30 days')->format('Y-m-d');
+        // Clonar la fecha para evitar modificar el objeto original
+        $fechaInicioIntervalo = (clone $fechaSolicitada)->modify('-30 days')->format('Y-m-d');
         
         return $this->createQueryBuilder('st')
             ->where('st.fecha BETWEEN :fechaInicio AND :fechaFin')

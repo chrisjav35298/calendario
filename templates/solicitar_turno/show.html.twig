@@ -1,9 +1,24 @@
+
 {% extends 'base.html.twig' %}
 
-{% block title %}SolicitarTurno{% endblock %}
+{% block title %}Ver Turno{% endblock %}
+{% block stylesheets %}
+
+<style>
+    .error-message {
+    background-color: #f8d7da; /* Color de fondo rojo claro */
+    color: #721c24; /* Color de texto rojo oscuro */
+    border: 1px solid #f5c6cb; /* Borde rojo */
+    padding: 10px; /* Espaciado interno */
+    margin-bottom: 10px; /* Margen inferior */
+}
+</style>
+{{ parent() }}
+ <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+{% endblock %}
 
 {% block body %}
-    <h1>SolicitarTurno</h1>
+    <h1>Editar Turno</h1>
 
     <table class="table">
         <tbody>

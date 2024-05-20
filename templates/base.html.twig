@@ -34,26 +34,39 @@
     <ul>
       <li><a href="#" class="contrast"><a class="" href="{{path('app_solicitar_turno_index')}}" aria-current="page">Usuario</a>
   </a></li>
-      <li><a href="" class="contrast">Services</a></li>
-      <li><a href="#" class="contrast" style="margin-right: 20px">Products</a></li>
+      <li><a href="" class="contrast">Link1</a></li>
+      <li><a href="#" class="contrast" style="margin: auto">Link2</a></li>
     </ul>
 </nav>
 
 
-
  {% endblock %}
 
-    {% block body %}
-   
+ {% block body %}
 
     <main class="container">
-    {% block main %}
-    <main class="container" style="width: 90%; margin-left: auto; margin-right: auto;">
-
-     {% endblock %}
+        {% block main %}
+            <main class="container-new" >
+        {% endblock %}
     </main>
 
-    {% endblock %}
+
+
+{% endblock %}
+
+
 
 </body>
+{% block footer%}
+    <div class="footer">
+        <div class="logo">
+            <p> <strong>{{ 'now' | date('Y') }}</strong> Conectar Lab</p>
+        </div>
+        <div class="social">
+            <a href="https://facebook.com" target="_blank">Facebook</a>
+            <a href="https://instagram.com" target="_blank">Instagram</a>
+        </div>
+    </div>
+{% endblock %}
+
 </html>
