@@ -37,7 +37,6 @@ class SolicitarTurnoRepository extends ServiceEntityRepository
         ;
     }
 
-
     /**
     * @return SolicitarTurno[] Returns an array of SolicitarTurno objects
     */
