@@ -3,7 +3,8 @@
 
 {% block title %}Solicitar Turno{% endblock %}
     {% block stylesheets %}
-
+    
+{# 
     <style>
         .error-message {
         background-color: #f8d7da; /* Color de fondo rojo claro */
@@ -14,7 +15,7 @@
         }
 
 
-    </style>
+    </style> #}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     {% endblock %}
@@ -22,39 +23,46 @@
 
    {% block main %}
  
-   {{ parent()}}
-   <main class="container-new">
-    <h1 class="">Solicitar Turno</h1>
+  
+   <div class="space-y-12">
+   <div class="border-b border-blue-900/10 pb-12">
+     <h2 class="text-base font-semibold leading-7 text-gray-900">Seleccionar un turno</h2>
     {% for flashMessage in app.flashes('error') %}
-    <div class="error-message">
+    <div class="error-message bg-red-100 text-red-800 border border-red-400 py-2 px-4 rounded-md">
         {{ flashMessage }}
     </div>
     {% endfor %}
-<div class="">
-    {{ form_start(form) }}
-    <div class="">
-        <label for="date">Fecha</label>
-        {{ form_widget(form.fecha, { 'attr': {'class': 'form-control'} }) }}
+    <div class="flow-root bg-gray-100  px-4 rounded-md">
+        {{ form_start(form, {'attr': {'class': 'mt-8'}}) }}
+        <div class="my-4">
+            <label for="date" class="block text-sm font-medium leading-6 text-gray-900">Fecha</label>
+            {{ form_widget(form.fecha, { 'attr': {'class': 'form-input mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'} }) }}
+        </div>
+        <div class="my-4">
+            <label for="solicitante" class="block text-sm font-medium leading-6 text-gray-900">Solicitante</label>
+            {{ form_widget(form.solicitante, { 'attr': {'class': 'form-input mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'} }) }}
+        </div>
+        <div class="my-4">
+            <label for="turno" class="block text-sm font-medium leading-6 text-gray-900">Turno</label>
+            {{ form_widget(form.turno, { 'attr': {'class': 'form-input mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'} }) }}
+        </div>
+        <!-- Agregué estilos para los campos ocultos también -->
+        <div class="my-4 hidden">
+            <label for="observacion" class="block text-sm font-medium leading-6 text-gray-900">Observación</label>
+            {{ form_widget(form.observacion, { 'attr': {'class': 'form-input mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'} }) }}
+        </div>
+        <div class="my-4 hidden">
+            <label for="estado" class="block text-sm font-medium leading-6 text-gray-900">Estado</label>
+            {{ form_widget(form.estado, { 'attr': {'class': 'form-input mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'} }) }}
+        </div>
+        <div class="my-7">
+        <button type="submit" class="btn btn-primary bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        Enviar</button>
+    {# <button type="submit" class="btn btn-primary">Enviar</button> #}
+        </div>
+        {{ form_end(form) }}
     </div>
-    <div class="">
-        <label for="solicitante">Solicitante</label>
-        {{ form_widget(form.solicitante, { 'attr': {'class': 'form-control'} }) }}
-    </div>
-    <div class="">
-        <label for="turno">Turno</label>
-        {{ form_widget(form.turno, { 'attr': {'class': 'form-control'} }) }}
-    </div>
-    <div class="">
-        <label for="observacion"  class="hidden" >Observación</label>
-        {{ form_widget(form.observacion, { 'attr': {'class': 'hidden'} }) }}
-    </div>
-    <div class="">
-        <label for="estado"  class="hidden">Estado</label>
-        {{ form_widget(form.estado, { 'attr': {'class': 'hidden'} }) }}
-    </div>
-    <button type="submit" class="btn btn-primary">Enviar</button>
-    {{ form_end(form) }}
-</div>
+
 <div id="calendar" class="mt-4"></div>
 </main>
       
