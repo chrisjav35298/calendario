@@ -2,17 +2,18 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\SolicitarTurno;
 use App\Form\SolicitarTurnoType;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\SolicitarTurnoRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\SolicitarTurnoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/solicitar/turno")
@@ -41,68 +42,6 @@ class SolicitarTurnoController extends AbstractController
         ]);
     }
 
-//    /**
-//      * @Route("/new", name="app_solicitar_turno_new", methods={"GET", "POST"})
-//      */
-//     public function new(Request $request, EntityManagerInterface $entityManager, SolicitarTurnoRepository $solicitarTurnoRepository): Response
-//     {
-//         $solicitarTurno = new SolicitarTurno();
-//         $form = $this->createForm(SolicitarTurnoType::class, $solicitarTurno);
-//         $form->handleRequest($request);
-
-//         if ($form->isSubmitted() && $form->isValid()) {
-//            // Obtener la fecha y el turno solicitados
-//         $fechaSolicitada = $solicitarTurno->getFecha();
-//         $turnoSolicitado = $solicitarTurno->getTurno();
-//         $fechaSolicitadaString = $fechaSolicitada->format('Y-m-d');
-//         $solicitante=$solicitarTurno->getSolicitante();
-
-//         $turnoSolitante= $solicitarTurnoRepository->findbySolicitante( $solicitante, $fechaSolicitada);
-
-//         if($turnoSolitante!== null){
-          
-//             $this->addFlash('error', 'Ya ha solicitado un turno en menos de 30 días.');
-//             return $this->redirectToRoute('app_solicitar_turno_new');
-//         }
-//         $turnoExistente= $solicitarTurnoRepository->findFechaYturno( $turnoSolicitado,$fechaSolicitadaString);
-
-
-
-//         if ($turnoExistente !== null) {
-//             // Ya existe un registro para el mismo día y turno
-//             $this->addFlash('error', 'Ya se ha solicitado un turno para ese día y horario.');
-//             return $this->redirectToRoute('app_solicitar_turno_new');
-//         } else {
-//                 $solicitarTurno->setEstado(1);
-//                 $entityManager->persist($solicitarTurno);
-//                 $entityManager->flush();
-
-//                 return $this->redirectToRoute('app_solicitar_turno_index', [], Response::HTTP_SEE_OTHER);
-//             }
-    
-//         }
-//         $fechasOcupadas = $solicitarTurnoRepository->findByMesPosterior();
-//         $turnosOcupados = [];
-       
-//         foreach ($fechasOcupadas as $turno) {
-//             $turnosOcupados[] = [
-//                 'fecha' => $turno->getFecha()->format('Y-m-d'),
-//                 'turno' => $turno->getTurno(),
-//                 'solicitante' => $turno->getSolicitante(),
-
-//             ];
-//         }
-
-//         return $this->renderForm('solicitar_turno/new.html.twig', [
-//             'solicitar_turno' => $solicitarTurno,
-//             'form' => $form,
-//             'turnosOcupados' => $turnosOcupados,
-//         ]);
-//     }
-
-
-
-
     /**
      * @Route("/new", name="app_solicitar_turno_new", methods={"GET", "POST"})
      */
@@ -111,37 +50,47 @@ class SolicitarTurnoController extends AbstractController
         $solicitarTurno = new SolicitarTurno();
         $form = $this->createForm(SolicitarTurnoType::class, $solicitarTurno);
         $form->handleRequest($request);
-    
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Obtener la fecha y el turno solicitados
             $fechaSolicitada = $solicitarTurno->getFecha();
             $turnoSolicitado = $solicitarTurno->getTurno();
-            $fechaSolicitadaString = $fechaSolicitada->format('Y-m-d');
             $solicitante = $solicitarTurno->getSolicitante();
-
-            $turnoSolicitante = $solicitarTurnoRepository->findbySolicitante($solicitante, $fechaSolicitada);
-            $turnoExistente = $solicitarTurnoRepository->findFechaYturno($turnoSolicitado, $fechaSolicitadaString);
-
-            if ($turnoSolicitante || $turnoExistente) {
-                $this->addFlash('error', 'Ya ha solicitado un turno en menos de 30 días! y/o desea solicitar un turno
-                                con mas de 30 días de diferencia con la fecha de hoy!.');
+          
+            // Calculamos la fecha máxima permitida (30 días después de la fecha solicitada)
+            $fechaMaxTurnos = clone $fechaSolicitada;
+            //$fechaMaxTurnos->modify('+30 days');
+            $hoy=new DateTime();
+            $diferencia = $hoy->diff($fechaSolicitada)->days;
+            if ($diferencia >= 30) {
+                $this->addFlash('error', 'Debe solicitar un turno con al menos 30 días de anticipación.');
                 return $this->redirectToRoute('app_solicitar_turno_new');
-            } elseif ($turnoExistente !== null) {
-                // Ya existe un registro para el mismo día y turno
+            }
+
+            // Verificamos si ya existe un turno para el solicitante en menos de 30 días
+            $turnoSolicitante = $solicitarTurnoRepository->findbySolicitante($solicitante, $fechaSolicitada);
+            if ($turnoSolicitante) {
+                $this->addFlash('error', 'Ya ha solicitado un turno en menos de 30 días.');
+                return $this->redirectToRoute('app_solicitar_turno_new');
+            }
+
+            // Verificamos si ya existe un turno para el mismo día y turno
+            $turnoExistente = $solicitarTurnoRepository->findFechaYturno($turnoSolicitado, $fechaSolicitada);
+            if ($turnoExistente) {
                 $this->addFlash('error', 'Ya se ha solicitado un turno para ese día y horario.');
                 return $this->redirectToRoute('app_solicitar_turno_new');
-            } else {
-                $solicitarTurno->setEstado(1);
-                $entityManager->persist($solicitarTurno);
-                $entityManager->flush();
-                return $this->redirectToRoute('app_solicitar_turno_index', [], Response::HTTP_SEE_OTHER);
             }
+
+            // Si no hay errores, persistimos el nuevo turno
+            $solicitarTurno->setEstado(1);
+            $entityManager->persist($solicitarTurno);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_solicitar_turno_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        // Obtenemos los turnos ocupados
         $fechasOcupadas = $solicitarTurnoRepository->findByMesPosterior();
         $turnosOcupados = [];
-
         foreach ($fechasOcupadas as $turno) {
             $turnosOcupados[] = [
                 'fecha' => $turno->getFecha()->format('Y-m-d'),
@@ -156,11 +105,6 @@ class SolicitarTurnoController extends AbstractController
             'turnosOcupados' => $turnosOcupados,
         ]);
     }
-
-
-
-
-
 
 
     /**

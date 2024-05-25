@@ -15,7 +15,17 @@ class SolicitarTurnoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('solicitante')
+        ->add('solicitante', ChoiceType::class, [
+                'choices' => [
+                    'seleccionar' => '',
+                    'EES 3' => 'EES 3',
+                    'EEP 1'  => 'EEP 1',
+                    'EET 2'  => 'EET 2',
+                    'EEE 8'  => 'EEE 8',
+                    'EET 33'  => 'EET 33',
+                
+                ]
+            ])
             ->add('fecha', DateType::class, [
                 'widget' => 'single_text',
             ])

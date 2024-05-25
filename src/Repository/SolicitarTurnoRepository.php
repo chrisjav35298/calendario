@@ -36,7 +36,8 @@ class SolicitarTurnoRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
+    //vamos a buscar todos los registros que coincidan con la fecha seleccionada y el turno seleccionado
+    //y el estado si encontrara ese registro sea distinto de rechazado.
     /**
     * @return SolicitarTurno[] Returns an array of SolicitarTurno objects
     */
@@ -54,6 +55,9 @@ class SolicitarTurnoRepository extends ServiceEntityRepository
         ;
     }
 
+    //vamos a buscar un registro que coincida con que la fecha ingresada este entre un intervalo de 30 dias
+    // y que el solicitante sea el  mismo que esta en el registro
+
     /**
      * @return SolicitarTurno[] Returns an array of SolicitarTurno objects
      */
@@ -61,12 +65,16 @@ class SolicitarTurnoRepository extends ServiceEntityRepository
     {
         // Clonar la fecha para evitar modificar el objeto original
         $fechaInicioIntervalo = (clone $fechaSolicitada)->modify('-30 days')->format('Y-m-d');
+        $fechaFinIntervalo = (clone $fechaSolicitada)->modify('+30 days')->format('Y-m-d');
+
+        // dump( $fechaInicioIntervalo);
+        // dd($fechaFinIntervalo);
         
         return $this->createQueryBuilder('st')
             ->where('st.fecha BETWEEN :fechaInicio AND :fechaFin')
             ->andWhere('st.solicitante = :solicitante')
             ->setParameter('fechaInicio', $fechaInicioIntervalo)
-            ->setParameter('fechaFin', $fechaSolicitada->format('Y-m-d'))
+            ->setParameter('fechaFin', $fechaFinIntervalo)
             ->setParameter('solicitante', $solicitante)
             ->getQuery()
             ->getResult();
