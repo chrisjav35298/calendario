@@ -3,7 +3,6 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
-
         <link rel="icon"  href="{{ asset('icons/lab.png') }}" />
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         
@@ -12,7 +11,7 @@
         <link  rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"> 
         
         <link  rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css"/>  #}
-           
+
              {{ encore_entry_link_tags('app') }} 
              
         {% endblock %}

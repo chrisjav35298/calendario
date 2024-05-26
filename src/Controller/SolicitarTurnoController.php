@@ -11,7 +11,7 @@ use App\Repository\SolicitarTurnoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use App\Repository\EstablecimientoRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -45,13 +45,26 @@ class SolicitarTurnoController extends AbstractController
     /**
      * @Route("/new", name="app_solicitar_turno_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager, SolicitarTurnoRepository $solicitarTurnoRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SolicitarTurnoRepository $solicitarTurnoRepository,EstablecimientoRepository $establecimientoRepository): Response
     {
         $solicitarTurno = new SolicitarTurno();
         $form = $this->createForm(SolicitarTurnoType::class, $solicitarTurno);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $data = $form->getData();
+            $cueanexoNombre = $data->getSolicitante();
+            // Separar cueanexo y nombre
+            [$cueanexo, $nombre] = explode(' - ', $cueanexoNombre, 2);
+
+            // Validar que cueanexo no esté vacío y exista en la tabla Establecimiento
+            if (empty($cueanexo) || !$establecimientoRepository->findOneBy(['cueanexo' => $cueanexo])) {
+                $this->addFlash('error', 'El CUE/Anexo ingresado no es válido.');
+                return $this->redirectToRoute('app_solicitar_turno_new');
+            }
+
             $fechaSolicitada = $solicitarTurno->getFecha();
             $turnoSolicitado = $solicitarTurno->getTurno();
             $solicitante = $solicitarTurno->getSolicitante();

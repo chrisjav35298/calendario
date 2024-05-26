@@ -18,6 +18,7 @@
     </style> #}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+
     {% endblock %}
 
 
@@ -65,8 +66,9 @@
     </div>
 
 <div id="calendar" class="mt-4"></div>
+
 </main>
-      
+
 {% endblock %}
 {% block footer%}
 
@@ -75,9 +77,68 @@
 
 
 {% block javascripts %}
-     <script src="{{ asset('js/calendario/index.global.min.js') }}"></script>
-     
+    <script src="{{ asset('js/calendario/index.global.min.js') }}"></script>   
+
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    let ruta = "{{ path('establecimiento_ajax') }}";
+    var inputElement = document.getElementById('solicitar_turno_solicitante');
+
+    // Función para manejar el evento de entrada de teclado
+    function handleInput() {
+        var inputValue = inputElement.value.trim();
+        var numericValue = parseInt(inputValue);
+
+        // Limpiar las sugerencias anteriores
+        clearSuggestions();
+
+        // Si el valor no es un número, salir
+        if (isNaN(numericValue)) {
+            return;
+        }
+
+        // Realizar solicitud AJAX para buscar establecimientos que coincidan con el cueanexo ingresado
+        fetch(ruta + '?cueanexo=' + numericValue, {
+            method: 'GET',
+        })
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(function(data) {
+            // Mostrar las sugerencias basadas en los datos recibidos
+            data.forEach(function(establecimiento) {
+                var suggestion = document.createElement('div');
+                suggestion.textContent = establecimiento.cueanexo + ' - ' + establecimiento.nombre;
+                suggestion.classList.add('suggestion');
+                suggestion.addEventListener('click', function() {
+                    // Al hacer clic en una sugerencia, llenar el campo de entrada con el cueanexo y el nombre seleccionados
+                    inputElement.value = establecimiento.cueanexo + ' - ' + establecimiento.nombre;
+                    // Limpiar las sugerencias después de seleccionar una
+                    clearSuggestions();
+                });
+                inputElement.parentNode.appendChild(suggestion);
+            });
+        })
+        .catch(function(error) {
+            console.error('Error al obtener las sugerencias:', error);
+        });
+    }
+
+    // Agregar un event listener para el evento de entrada de teclado
+    inputElement.addEventListener('input', handleInput);
+
+    // Función para limpiar las sugerencias
+    function clearSuggestions() {
+        inputElement.parentNode.querySelectorAll('.suggestion').forEach(function(suggestion) {
+            suggestion.remove();
+        });
+    }
+});
+
+
     // Función para validar que la fecha seleccionada no sea anterior al día de hoy
     document.addEventListener('DOMContentLoaded', function() {
         const inputFecha = document.getElementById('solicitar_turno_fecha');
@@ -90,6 +151,13 @@
             if (fechaIngresada < fechaActual) {
                 alert('No puede seleccionar una fecha anterior al día de hoy!');
                 event.target.value = ''; // Limpiar el valor del input
+            }
+        });
+
+        // Limpiar sugerencias cuando el campo de entrada se vacía
+        inputFecha.addEventListener('input', function(event) {
+            if (event.target.value.trim() === '') {
+                clearSuggestions();
             }
         });
     });
@@ -139,6 +207,7 @@
         });
         calendar.render();
     });
+
 </script> 
 
 {% endblock %}
