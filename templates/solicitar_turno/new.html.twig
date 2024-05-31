@@ -18,6 +18,7 @@
     </style> #}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+
     {% endblock %}
 
 
@@ -26,7 +27,7 @@
   
    <div class="space-y-12">
    <div class="border-b border-blue-900/10 pb-12">
-     <h2 class="text-base font-semibold leading-7 text-gray-900">Seleccionar un turno</h2>
+     <h2 class="text-base my-6 font-semibold leading-7 text-gray-900">Seleccionar un turno</h2>
     {% for flashMessage in app.flashes('error') %}
     <div class="error-message bg-red-100 text-red-800 border border-red-400 py-2 px-4 rounded-md">
         {{ flashMessage }}
@@ -36,7 +37,8 @@
         {{ form_start(form, {'attr': {'class': 'mt-8'}}) }}
         <div class="my-4">
             <label for="date" class="block text-sm font-medium leading-6 text-gray-900">Fecha</label>
-            {{ form_widget(form.fecha, { 'attr': {'class': 'form-input mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'} }) }}
+            {{ form_widget(form.fecha, { 'attr': {'class': 'form-input mt-1 block w-full 
+            rounded border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'} }) }}
         </div>
         <div class="my-4">
             <label for="solicitante" class="block text-sm font-medium leading-6 text-gray-900">Solicitante</label>
@@ -64,8 +66,9 @@
     </div>
 
 <div id="calendar" class="mt-4"></div>
+
 </main>
-      
+
 {% endblock %}
 {% block footer%}
 
@@ -74,14 +77,73 @@
 
 
 {% block javascripts %}
-     <script src="{{ asset('js/calendario/index.global.min.js') }}"></script>
-     <script src="{{ asset('js/calendario/diasOcupados.js') }}"></script>
+    <script src="{{ asset('js/calendario/index.global.min.js') }}"></script>   
+
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    let ruta = "{{ path('establecimiento_ajax') }}";
+    var inputElement = document.getElementById('solicitar_turno_solicitante');
+
+    // Función para manejar el evento de entrada de teclado
+    function handleInput() {
+        var inputValue = inputElement.value.trim();
+        var numericValue = parseInt(inputValue);
+
+        // Limpiar las sugerencias anteriores
+        clearSuggestions();
+
+        // Si el valor no es un número, salir
+        if (isNaN(numericValue)) {
+            return;
+        }
+
+        // Realizar solicitud AJAX para buscar establecimientos que coincidan con el cueanexo ingresado
+        fetch(ruta + '?cueanexo=' + numericValue, {
+            method: 'GET',
+        })
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(function(data) {
+            // Mostrar las sugerencias basadas en los datos recibidos
+            data.forEach(function(establecimiento) {
+                var suggestion = document.createElement('div');
+                suggestion.textContent = establecimiento.cueanexo + ' - ' + establecimiento.nombre;
+                suggestion.classList.add('suggestion');
+                suggestion.addEventListener('click', function() {
+                    // Al hacer clic en una sugerencia, llenar el campo de entrada con el cueanexo y el nombre seleccionados
+                    inputElement.value = establecimiento.cueanexo + ' - ' + establecimiento.nombre;
+                    // Limpiar las sugerencias después de seleccionar una
+                    clearSuggestions();
+                });
+                inputElement.parentNode.appendChild(suggestion);
+            });
+        })
+        .catch(function(error) {
+            console.error('Error al obtener las sugerencias:', error);
+        });
+    }
+
+    // Agregar un event listener para el evento de entrada de teclado
+    inputElement.addEventListener('input', handleInput);
+
+    // Función para limpiar las sugerencias
+    function clearSuggestions() {
+        inputElement.parentNode.querySelectorAll('.suggestion').forEach(function(suggestion) {
+            suggestion.remove();
+        });
+    }
+});
+
+
     // Función para validar que la fecha seleccionada no sea anterior al día de hoy
     document.addEventListener('DOMContentLoaded', function() {
         const inputFecha = document.getElementById('solicitar_turno_fecha');
         const fechaActual = new Date();
-
+        document.getElementById('solicitar_turno_fecha').focus();
         inputFecha.addEventListener('change', function(event) {
             const fechaIngresada = new Date(event.target.value);
 
@@ -91,11 +153,19 @@
                 event.target.value = ''; // Limpiar el valor del input
             }
         });
+
+        // Limpiar sugerencias cuando el campo de entrada se vacía
+        inputFecha.addEventListener('input', function(event) {
+            if (event.target.value.trim() === '') {
+                clearSuggestions();
+            }
+        });
     });
 
  //Inicialización del calendario y manejo de selección de fechas
     document.addEventListener('DOMContentLoaded', function() {
         let turnosOcupados = {{ turnosOcupados|json_encode|raw }};
+        
         const calendarEl = document.getElementById('calendar');
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
@@ -116,6 +186,7 @@
                 const day = String(fechaSeleccionada.getDate()).padStart(2, '0');
 
                 const fechaFormateada = `${year}-${month}-${day}`;
+                const fechaFormateadaDos = `${year}-${month}-${day}`;
 
                 if (turnosOcupados.includes(fechaFormateada)) {
                     return;
@@ -125,9 +196,9 @@
             },
             events: [
             {% for turno in turnosOcupados %}
-            
+           
             {
-                title: '{{ turno.solicitante }}',
+                title: '{{ turno.solicitante }} - {{ turno.turno }}',
                 start: '{{ turno.fecha }}',
                 color: 'violet' // Color para indicar que el turno está ocupado
             },
@@ -136,6 +207,7 @@
         });
         calendar.render();
     });
+
 </script> 
 
 {% endblock %}

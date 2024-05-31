@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Establecimiento index{% endblock %}
+
+{% block body %}
+    <h1>Establecimiento index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Cueanexo</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for establecimiento in establecimientos %}
+            <tr>
+                <td>{{ establecimiento.id }}</td>
+                <td>{{ establecimiento.nombre }}</td>
+                <td>{{ establecimiento.cueanexo }}</td>
+                <td>
+                    <a href="{{ path('app_establecimiento_show', {'id': establecimiento.id}) }}">show</a>
+                    <a href="{{ path('app_establecimiento_edit', {'id': establecimiento.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_establecimiento_new') }}">Create new</a>
+{% endblock %}
