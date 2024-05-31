@@ -22,24 +22,23 @@
         {{ encore_entry_script_tags('app') }} 
         {% endblock %}
     </head>
-   
-{% block nav %}
-    <nav class="">
-        <div class="container mx-auto  flex justify-between items-center">
+    {% block nav %}
+    <nav class="bg-[#082140]">
+        <div class="container mx-auto flex justify-between items-center">
             <ul class="flex items-center">
                 <li>
-                    <strong><img class="h-15 w-20 my-3" src="{{ asset('icons/lab.png') }}" alt="Logo"></strong>
+                    <strong><img class="h-12 w-12 my-3" src="{{ asset('icons/lab.png') }}" alt="Logo"></strong>
                 </li>
             </ul>
             <ul class="flex items-center">
                 <li>
-                    <a href="{{ path('app_solicitar_turno_index') }}" class="mx-4 hover:underline">Usuario</a>
+                    <a href="{{ path('app_solicitar_turno_index') }}" class="mx-4 hover:underline text-white">Usuario</a>
                 </li>
                 <li>
-                    <a href="#" class="mx-4 hover:underline">Link1</a>
+                    <a href="#" class="mx-4 hover:underline text-white">Link1</a>
                 </li>
                 <li>
-                    <a href="#" class="mx-4 hover:underline">Link2</a>
+                    <a href="#" class="mx-4 hover:underline text-white">Link2</a>
                 </li>
             </ul>
         </div>
@@ -62,15 +61,14 @@
 
 </body>
 {% block footer%}
-    {# <div class="footer">
-        <div class="logo">
-            <p> <strong>{{ 'now' | date('Y') }}</strong> Conectar Lab</p>
-        </div>
-        <div class="social">
-            <a href="https://facebook.com" target="_blank">Facebook</a>
-            <a href="https://instagram.com" target="_blank">Instagram</a>
-        </div>
-    </div> #}
+
+<footer class="footer">
+
+  <div class="col-md-12 text-right finaltext">
+    <p>Copyright &copy; <strong>{{ 'now' | date('Y') }}</strong> ConectarLab | Design by BEETYP</p>
+  </div>
+</footer>
+   
 {% endblock %}
 
 </html>
