@@ -14,36 +14,45 @@
  {{parent()}}
   {% endblock %}
 
-{% block main %}
-{{parent()}}
+
+  {% block main %}
+ 
   
-   <main class="container">
-        <h1 class="">Editar Turno</h1>
-         <div class="">
-            {{ form_start(form) }}
-            <div class="">
-                <label class="" >Solicitante</label>
-                {{ form_widget(form.solicitante, { 'attr': {'class': '','readonly': 'readonly'} }) }}
+  <div class="space-y-12">
+  <div class="border-b border-blue-900/10 pb-12">
+    <h2 class="text-base my-6 font-semibold leading-7 text-gray-900">Editar turno</h2>
+   {% for flashMessage in app.flashes('error') %}
+   <div class="error-message bg-red-100 text-red-800 border border-red-400 py-2 px-4 rounded-md">
+       {{ flashMessage }}
+   </div>
+   {% endfor %}
+   <div class="flow-root bg-gray-100  px-4 rounded-md">
+       {{ form_start(form, {'attr': {'class': 'mt-8'}}) }}
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Solicitante</label>
+                {{ form_widget(form.solicitante, { 'attr': {'class': 'w-full px-3 py-2 border rounded text-gray-700 bg-gray-200', 'readonly': 'readonly'} }) }}
             </div>
             
-            <div class="">
-                <label class="" >Fecha</label>
-                {{ form_widget(form.fecha, { 'attr': {'class': '','readonly': 'readonly'} }) }}
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Fecha</label>
+                {{ form_widget(form.fecha, { 'attr': {'class': 'w-full px-3 py-2 border rounded text-gray-700 bg-gray-200', 'readonly': 'readonly'} }) }}
             </div>
-            <div class="">
-                <label class="" for="turno">Turno</label>
-                {{ form_widget(form.turno,  { 'attr': {'class': '','readonly': 'readonly'} }) }}
-         
-              <div class="">
-                <label class="" >Estado</label>
-                {{ form_widget(form.estado, { 'attr': {'class': ''} }) }}
+            <div class="my-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Turno</label>
+                {{ form_widget(form.turno, { 'attr': {'class': 'w-full px-3 py-2 border rounded text-gray-700 bg-gray-200', 'readonly': 'readonly'} }) }}
             </div>
-            <div class="">
-                <label class="">Observación</label>
-                {{ form_widget(form.observacion, { 'attr': {'class': ''} }) }}
+            <div class="my-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2">Estado</label>
+                {{ form_widget(form.estado, { 'attr': {'class': 'form-input mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'} }) }}
             </div>
-
-            <button type="submit" class="">Guardar</button>
+             
+            <div class="my-4">
+             <label class="block text-gray-700 text-sm font-bold mb-2">Observación</label>
+                {{ form_widget(form.observacion, { 'attr': {'class': 'form-input mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'} }) }}
+            </div>
+            <div class="my-7">
+            <button type="submit" class="btn btn-primary bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline">
+            Guardar</button>
 
             {{ form_end(form) }}
        </div>

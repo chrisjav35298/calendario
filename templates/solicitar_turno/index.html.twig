@@ -12,29 +12,29 @@
 {% endblock %}
 
 {% block main %}
-    <h1>Turnos solicitados</h1>
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <h1></h1>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg my-4">
     <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-gray-50">
-        <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Id</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Solicitante</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turno</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Observacion</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-        </tr>
+    <tr>
+    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider font-sans">Id</th>
+    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider font-sans">Solicitante</th>
+    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider font-sans">Fecha</th>
+    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider font-sans">Turno</th>
+    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider font-sans">Observacion</th>
+    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider font-sans">Estado</th>
+    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider font-sans">Acciones</th>
+</tr>
     </thead>
     <tbody class="bg-white divide-y divide-gray-200">
         {% for solicitar_turno in pagination %}
             <tr>
-                <td class="px-6 py-4 whitespace-nowrap">{{ solicitar_turno.id }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ solicitar_turno.solicitante }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ solicitar_turno.fecha ? solicitar_turno.fecha|date('Y-m-d') : '' }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ solicitar_turno.turno }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ solicitar_turno.observacion }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-4 whitespace-nowrap font-sans">{{ solicitar_turno.id }}</td>
+                <td class="px-6 py-4 whitespace-nowrap font-sans">{{ solicitar_turno.solicitante }}</td>
+                <td class="px-6 py-4 whitespace-nowrap font-sans">{{ solicitar_turno.fecha ? solicitar_turno.fecha|date('Y-m-d') : '' }}</td>
+                <td class="px-6 py-4 whitespace-nowrap font-sans">{{ solicitar_turno.turno }}</td>
+                <td class="px-6 py-4 whitespace-nowrap font-sans">{{ solicitar_turno.observacion }}</td>
+                <td class="px-6 py-4 whitespace-nowrap font-sans">
                     {% if solicitar_turno.estado == 1 %}
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Enviado</span>
                     {% elseif solicitar_turno.estado == 2 %}
@@ -43,7 +43,7 @@
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Rechazado</span>
                     {% endif %}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium font-sans">
                     <a href="{{ path('app_solicitar_turno_show', {'id': solicitar_turno.id}) }}" class="text-indigo-600 hover:text-indigo-900">Ver</a>
                     <a href="{{ path('app_solicitar_turno_edit', {'id': solicitar_turno.id}) }}" class="text-indigo-600 hover:text-indigo-900 ml-4">Editar</a>
                 </td>
@@ -60,11 +60,13 @@
         {{ knp_pagination_render(pagination) }}
     </div>
 
-    <div>
-        <a href="{{ path('app_solicitar_turno_new') }}" class="btn btn-primary bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline">Crear nuevo</a>
+    <div class="my-4">
+        <a href="{{ path('app_solicitar_turno_new') }}" class="btn btn-primary bg-blue-500 hover:bg-blue-600 text-white font-bold
+     py-2 my-4 px-2  focus:outline-none focus:shadow-outline">Crear nuevo</a>
     </div>
 {% endblock %}
 {% block footer%}
+{{ parent() }}
 
 {% endblock %}
 

@@ -32,10 +32,11 @@
             </ul>
             <ul class="flex items-center">
                 <li>
-                    <a href="{{ path('app_solicitar_turno_index') }}" class="mx-4 hover:underline text-white">Usuario</a>
+                    <a href="#" class="mx-4 hover:underline text-white">Usuario</a>
                 </li>
                 <li>
-                    <a href="#" class="mx-4 hover:underline text-white">Link1</a>
+                <a href="{{ path('app_solicitar_turno_index') }}" class="mx-4 hover:underline text-white">Inicio</a>
+
                 </li>
                 <li>
                     <a href="#" class="mx-4 hover:underline text-white">Link2</a>
@@ -47,7 +48,7 @@
 
  {% block body %}
 
-    <main class="container mx-auto px-8">
+    <main class="container mx-auto ">
         {% block main %}
       
         {% endblock %}
@@ -60,15 +61,12 @@
 
 
 </body>
-{% block footer%}
-
-<footer class="footer">
-
-  <div class="col-md-12 text-right finaltext">
-    <p>Copyright &copy; <strong>{{ 'now' | date('Y') }}</strong> ConectarLab | Design by BEETYP</p>
+{% block footer %}
+<footer class="footer mt-auto py-3 text-right h-32" style="background-color: #333"><!--  #9B51E0; -->
+  <div class="container mx-auto px-4 h-full flex items-center justify-end">  
+    <p>&copy; <strong>{{ 'now' | date('Y') }}</strong> ConectarLab | Design by IESETyFP</p>
   </div>
 </footer>
-   
 {% endblock %}
 
 </html>

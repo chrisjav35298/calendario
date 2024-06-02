@@ -16,38 +16,51 @@
 {{ parent() }}
  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 {% endblock %}
+{% block nav %}
+{{ parent() }}
+{% endblock %}
 
-{% block body %}
-    <h1>Editar Turno</h1>
+{% block body %}<h1 class="text-2xl font-bold my-20 mb-6 font-sans"></h1>
 
-    <table class="table">
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ solicitar_turno.id }}</td>
+            <tr class="border-b">
+                <th class="py-4 px-6" style="background-color: #9B51E0; font-weight: bold; text-align: left;  color: white; font-sans">Id</th>
+                <td class="py-4 px-6 font-sans">{{ solicitar_turno.id }}</td>
+            </tr>
+            <tr class="border-b">
+                <th class="py-4 px-6" style="background-color: #9B51E0; font-weight: bold; text-align: left; color: white; font-sans">Solicitante</th>
+                <td class="py-4 px-6 font-sans">{{ solicitar_turno.solicitante }}</td>
+            </tr>
+            <tr class="border-b">
+                <th class="py-4 px-6" style="background-color: #9B51E0; font-weight: bold; text-align: left; color: white; font-sans">Fecha</th>
+                <td class="py-4 px-6">{{ solicitar_turno.fecha ? solicitar_turno.fecha|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr class="border-b">
+                <th class="py-4 px-6" style="background-color: #9B51E0; font-weight: bold; text-align: left;  color: white; font-sans">Observacion</th>
+                <td class="py-4 px-6">{{ solicitar_turno.observacion }}</td>
             </tr>
             <tr>
-                <th>Solicitante</th>
-                <td>{{ solicitar_turno.solicitante }}</td>
-            </tr>
-            <tr>
-                <th>Fecha</th>
-                <td>{{ solicitar_turno.fecha ? solicitar_turno.fecha|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Observacion</th>
-                <td>{{ solicitar_turno.observacion }}</td>
-            </tr>
-            <tr>
-                <th>Estado</th>
-                <td>{{ solicitar_turno.estado }}</td>
+
+            
+            <th class="py-4 px-6" style="background-color: #9B51E0; font-weight: bold; text-align: left;  color: white;font-sans">Estado</th>
+            <td class="py-4 px-6">  
+                {% if solicitar_turno.estado == 1 %}
+                    <span class="px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 font-sans">Enviado</span>
+                {% elseif solicitar_turno.estado == 2 %}
+                    <span class="px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800 font-sans">Confirmado</span>
+                {% else %}
+                    <span class="px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-red-100 text-red-800 font-sans">Rechazado</span>
+                {% endif %}
+            </td>
             </tr>
         </tbody>
     </table>
+</div>
+{# 
+<a href="{{ path('app_solicitar_turno_index') }}">back to list</a>
+<a href="{{ path('app_solicitar_turno_edit', {'id': solicitar_turno.id}) }}">edit</a> #}
 
-    <a href="{{ path('app_solicitar_turno_index') }}">back to list</a>
-
-    <a href="{{ path('app_solicitar_turno_edit', {'id': solicitar_turno.id}) }}">edit</a>
-
-    {{ include('solicitar_turno/_delete_form.html.twig') }}
+{{ include('solicitar_turno/_delete_form.html.twig') }}
 {% endblock %}
